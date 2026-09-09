@@ -198,12 +198,12 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-3">
           <h4 class="text-sm font-semibold text-cyan-400">📡 MQTT Broker (HiveMQ)</h4>
-          <input id="mqttHost" type="text" placeholder="wss://your-cluster.s1.eu.hivemq.cloud:8884/mqtt" 
+          <input id="mqttHost" type="text" placeholder="wss://a7b960a5948d4d2896227cc36e10a11e.s1.eu.hivemq.cloud:8884/mqtt" 
             class="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-cyan-500">
           <div class="flex gap-2">
-            <input id="mqttUser" type="text" placeholder="Username" 
+            <input id="mqttUser" type="text" placeholder="Hydrogen" 
               class="flex-1 bg-slate-900 border border-slate-600 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-cyan-500">
-            <input id="mqttPass" type="password" placeholder="Password" 
+            <input id="mqttPass" type="password" placeholder="123456789" 
               class="flex-1 bg-slate-900 border border-slate-600 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-cyan-500">
           </div>
           <button onclick="connectMQTT()" class="w-full px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-xl text-sm font-semibold transition">
@@ -212,7 +212,7 @@
         </div>
         <div class="space-y-3">
           <h4 class="text-sm font-semibold text-emerald-400">📊 Google Sheets URL</h4>
-          <input id="sheetsUrl" type="text" placeholder="https://script.google.com/macros/s/.../exec" 
+          <input id="sheetsUrl" type="text" placeholder="https://script.google.com/macros/s/AKfycbw0sGP6i-3S3wpmr7wHSYQWYsvotFnz5x3gW5J-GzXZXGFa4clOQfsTlF-rh_1kGKNJ/exec" 
             class="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-emerald-500">
           <button onclick="setSheetsUrl()" class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-sm font-semibold transition">
             🔗 Connect Sheets
