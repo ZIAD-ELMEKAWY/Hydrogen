@@ -32,10 +32,10 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body class="bg-slate-950 text-white min-h-screen">
 
-  <!-- Header -->
   <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between flex-wrap gap-3">
       <div class="flex items-center gap-3">
@@ -46,12 +46,10 @@
         </div>
       </div>
       <div class="flex items-center gap-3 flex-wrap">
-        <!-- Connection Status -->
         <div id="mqttStatus" class="flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700">
           <span class="relative w-2.5 h-2.5 bg-slate-500 rounded-full" id="statusDot"></span>
           <span id="statusText" class="text-slate-400">Disconnected</span>
         </div>
-        <!-- Data Source Toggle -->
         <select id="dataSource" onchange="switchDataSource()" class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 text-sm">
           <option value="mqtt">📡 MQTT Live</option>
           <option value="sheets">📊 Google Sheets</option>
@@ -66,7 +64,6 @@
 
   <main class="max-w-7xl mx-auto px-6 py-8">
 
-    <!-- Alert Banner -->
     <div id="alertBanner" class="hidden mb-6 bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center gap-3 fade-in">
       <span class="text-2xl">⚠️</span>
       <div>
@@ -75,7 +72,6 @@
       </div>
     </div>
 
-    <!-- Last Update Info -->
     <div class="flex justify-between items-center mb-4">
       <p class="text-sm text-slate-500" id="lastUpdate">Waiting for data...</p>
       <p class="text-sm text-slate-500" id="deviceInfo"></p>
@@ -83,8 +79,6 @@
 
     <!-- Sensor Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-
-      <!-- Hydrogen -->
       <div class="sensor-card glass rounded-2xl p-6 border border-slate-700/50">
         <div class="flex items-center justify-between mb-4">
           <div class="w-11 h-11 bg-amber-500/15 rounded-xl flex items-center justify-center text-xl border border-amber-500/20">⚗️</div>
@@ -101,7 +95,6 @@
         <p class="text-xs text-slate-500 mt-2" id="status-h2">Waiting...</p>
       </div>
 
-      <!-- Water Temperature -->
       <div class="sensor-card glass rounded-2xl p-6 border border-slate-700/50">
         <div class="flex items-center justify-between mb-4">
           <div class="w-11 h-11 bg-rose-500/15 rounded-xl flex items-center justify-center text-xl border border-rose-500/20">🌡️</div>
@@ -118,7 +111,6 @@
         <p class="text-xs text-slate-500 mt-2" id="status-temp">Waiting...</p>
       </div>
 
-      <!-- Water Level -->
       <div class="sensor-card glass rounded-2xl p-6 border border-slate-700/50">
         <div class="flex items-center justify-between mb-4">
           <div class="w-11 h-11 bg-blue-500/15 rounded-xl flex items-center justify-center text-xl border border-blue-500/20">💧</div>
@@ -135,7 +127,6 @@
         <p class="text-xs text-slate-500 mt-2" id="status-level">Waiting...</p>
       </div>
 
-      <!-- pH -->
       <div class="sensor-card glass rounded-2xl p-6 border border-slate-700/50">
         <div class="flex items-center justify-between mb-4">
           <div class="w-11 h-11 bg-emerald-500/15 rounded-xl flex items-center justify-center text-xl border border-emerald-500/20">🧪</div>
@@ -153,7 +144,7 @@
       </div>
     </div>
 
-    <!-- Charts Row -->
+    <!-- Charts -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
       <div class="lg:col-span-2 glass rounded-2xl p-6 border border-slate-700/50">
         <div class="flex items-center justify-between mb-4">
@@ -172,7 +163,6 @@
       </div>
     </div>
 
-    <!-- Bar Chart + Table -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
       <div class="glass rounded-2xl p-6 border border-slate-700/50">
         <h3 class="text-lg font-semibold mb-4">📊 Current Values</h3>
@@ -202,12 +192,10 @@
       </div>
     </div>
 
-    <!-- Configuration Panel -->
+    <!-- Config -->
     <div class="glass rounded-2xl p-6 border border-slate-700/50 mb-8">
       <h3 class="text-lg font-semibold mb-4">⚙️ Configuration</h3>
-
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- MQTT Config -->
         <div class="space-y-3">
           <h4 class="text-sm font-semibold text-cyan-400">📡 MQTT Broker (HiveMQ)</h4>
           <input id="mqttHost" type="text" placeholder="wss://your-cluster.s1.eu.hivemq.cloud:8884/mqtt" 
@@ -222,8 +210,6 @@
             🔗 Connect MQTT
           </button>
         </div>
-
-        <!-- Google Sheets Config -->
         <div class="space-y-3">
           <h4 class="text-sm font-semibold text-emerald-400">📊 Google Sheets URL</h4>
           <input id="sheetsUrl" type="text" placeholder="https://script.google.com/macros/s/.../exec" 
@@ -236,43 +222,6 @@
       </div>
     </div>
 
-    <!-- Setup Guide -->
-    <div class="glass rounded-2xl p-6 border border-slate-700/50">
-      <h3 class="text-lg font-semibold mb-4">📖 Quick Setup Guide</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-        <div class="p-4 bg-slate-900/50 rounded-xl border border-slate-800">
-          <h4 class="font-semibold text-cyan-400 mb-2">1. MQTT (Real-time)</h4>
-          <ol class="text-slate-400 space-y-1 list-decimal list-inside text-xs">
-            <li>Sign up at <a href="https://www.hivemq.com/mqtt-cloud-broker/" target="_blank" class="text-cyan-400 underline">HiveMQ Cloud</a></li>
-            <li>Create a free cluster</li>
-            <li>Add credentials (Access Management)</li>
-            <li>Copy WebSocket URL (wss://...:8884)</li>
-            <li>Paste credentials above → Connect</li>
-          </ol>
-        </div>
-        <div class="p-4 bg-slate-900/50 rounded-xl border border-slate-800">
-          <h4 class="font-semibold text-emerald-400 mb-2">2. Google Sheets (History)</h4>
-          <ol class="text-slate-400 space-y-1 list-decimal list-inside text-xs">
-            <li>Create Google Sheet with 7 columns</li>
-            <li>Open Extensions → Apps Script</li>
-            <li>Paste the provided .gs code</li>
-            <li>Deploy as Web App (Anyone access)</li>
-            <li>Copy URL → paste above → Connect</li>
-          </ol>
-        </div>
-        <div class="p-4 bg-slate-900/50 rounded-xl border border-slate-800">
-          <h4 class="font-semibold text-amber-400 mb-2">3. ESP32 (Hardware)</h4>
-          <ol class="text-slate-400 space-y-1 list-decimal list-inside text-xs">
-            <li>Install PubSubClient + ArduinoJson</li>
-            <li>Fill WiFi & MQTT credentials in .ino</li>
-            <li>Paste Google Script URL in .ino</li>
-            <li>Upload to ESP32</li>
-            <li>Open Serial Monitor @ 115200</li>
-          </ol>
-        </div>
-      </div>
-    </div>
-
   </main>
 
   <footer class="border-t border-slate-800 mt-12 py-6 text-center text-slate-600 text-sm">
@@ -280,23 +229,19 @@
   </footer>
 
 <script type="module">
-// ==================== IMPORT MQTT ====================
 import mqtt from 'https://unpkg.com/mqtt/dist/mqtt.esm.js';
 
-// ==================== CONFIG ====================
 let MQTT_CLIENT = null;
 let SHEETS_URL = localStorage.getItem('water_sheets_url') || '';
 let MQTT_HOST  = localStorage.getItem('water_mqtt_host') || '';
 let MQTT_USER  = localStorage.getItem('water_mqtt_user') || '';
 let MQTT_PASS  = localStorage.getItem('water_mqtt_pass') || '';
 
-// Pre-fill inputs
 if (SHEETS_URL) document.getElementById('sheetsUrl').value = SHEETS_URL;
 if (MQTT_HOST)  document.getElementById('mqttHost').value = MQTT_HOST;
 if (MQTT_USER)  document.getElementById('mqttUser').value = MQTT_USER;
 if (MQTT_PASS)  document.getElementById('mqttPass').value = MQTT_PASS;
 
-// Thresholds
 const THRESHOLDS = {
   hydrogen:   { min: 20, max: 80,  warning: [30, 70] },
   waterTemp:  { min: 15, max: 35,  warning: [18, 30] },
@@ -308,7 +253,6 @@ let sensorData = [];
 let lineChart, barChart, radarChart;
 let currentSource = 'demo';
 
-// ==================== DEMO DATA ====================
 function generateDemoData(count = 50) {
   const data = [];
   const now = Date.now();
@@ -326,7 +270,6 @@ function generateDemoData(count = 50) {
   return data;
 }
 
-// ==================== CHARTS INIT ====================
 function initCharts() {
   Chart.defaults.color = '#94a3b8';
   Chart.defaults.borderColor = '#334155';
@@ -410,7 +353,6 @@ function initCharts() {
   });
 }
 
-// ==================== UI UPDATES ====================
 function getStatus(value, type) {
   const t = THRESHOLDS[type];
   if (value < t.min || value > t.max) return { text: '⚠️ Critical', color: 'text-red-400' };
@@ -423,19 +365,16 @@ function updateUI(data) {
   const latest = data[data.length - 1];
   sensorData = data;
 
-  // Cards
   document.getElementById('val-h2').textContent = latest.hydrogen?.toFixed(1) ?? '--';
   document.getElementById('val-temp').textContent = latest.waterTemp?.toFixed(1) ?? '--';
   document.getElementById('val-level').textContent = latest.waterLevel?.toFixed(1) ?? '--';
   document.getElementById('val-ph').textContent = latest.ph?.toFixed(2) ?? '--';
 
-  // Bars
   document.getElementById('bar-h2').style.width = Math.min((latest.hydrogen / 100) * 100, 100) + '%';
   document.getElementById('bar-temp').style.width = Math.min((latest.waterTemp / 50) * 100, 100) + '%';
   document.getElementById('bar-level').style.width = Math.min((latest.waterLevel / 50) * 100, 100) + '%';
   document.getElementById('bar-ph').style.width = Math.min((latest.ph / 14) * 100, 100) + '%';
 
-  // Status
   const sH2 = getStatus(latest.hydrogen, 'hydrogen');
   const sTemp = getStatus(latest.waterTemp, 'waterTemp');
   const sLevel = getStatus(latest.waterLevel, 'waterLevel');
@@ -450,7 +389,6 @@ function updateUI(data) {
   document.getElementById('status-ph').className = `text-xs mt-2 ${sPh.color}`;
   document.getElementById('status-ph').textContent = sPh.text;
 
-  // Alert
   const alertBanner = document.getElementById('alertBanner');
   const criticalSensors = [];
   if (latest.hydrogen < THRESHOLDS.hydrogen.min || latest.hydrogen > THRESHOLDS.hydrogen.max) criticalSensors.push('Hydrogen');
@@ -465,11 +403,9 @@ function updateUI(data) {
     alertBanner.classList.add('hidden');
   }
 
-  // Last update
   document.getElementById('lastUpdate').textContent = `Last update: ${latest.timestamp}`;
   document.getElementById('deviceInfo').textContent = latest.device ? `Device: ${latest.device} | RSSI: ${latest.rssi} dBm` : '';
 
-  // Table
   const tbody = document.getElementById('dataTable');
   tbody.innerHTML = data.slice(-15).reverse().map(d => `
     <tr class="border-b border-slate-700/30 hover:bg-slate-700/20 transition fade-in">
@@ -482,10 +418,13 @@ function updateUI(data) {
   `).join('');
   document.getElementById('recordCount').textContent = `${data.length} records`;
 
-  updateCharts(data);
+  updateCharts();
 }
 
-function updateCharts(data) {
+// FIXED: attached to window so HTML onchange can call it
+window.updateCharts = function() {
+  const data = sensorData;
+  if (!data || !data.length) return;
   const range = parseInt(document.getElementById('timeRange').value) || 20;
   const sliced = data.slice(-range);
   const labels = sliced.map(d => d.timestamp);
@@ -508,9 +447,8 @@ function updateCharts(data) {
     Math.min((latest.ph / 14) * 100, 100)
   ];
   radarChart.update('none');
-}
+};
 
-// ==================== MQTT CONNECTION ====================
 window.connectMQTT = async function() {
   const host = document.getElementById('mqttHost').value.trim();
   const user = document.getElementById('mqttUser').value.trim();
@@ -538,11 +476,9 @@ window.connectMQTT = async function() {
       MQTT_CLIENT.subscribe('water/sensors/data');
       MQTT_CLIENT.subscribe('water/sensors/status');
       console.log('MQTT connected');
-
-      // Switch to MQTT source
       document.getElementById('dataSource').value = 'mqtt';
       currentSource = 'mqtt';
-      sensorData = []; // Clear old data
+      sensorData = [];
     });
 
     MQTT_CLIENT.on('message', (topic, message) => {
@@ -559,7 +495,7 @@ window.connectMQTT = async function() {
             rssi: payload.wifi_rssi || 0
           };
           sensorData.push(entry);
-          if (sensorData.length > 500) sensorData.shift(); // Keep last 500
+          if (sensorData.length > 500) sensorData.shift();
           updateUI(sensorData);
         } catch (e) { console.error('Parse error:', e); }
       }
@@ -584,7 +520,6 @@ function updateStatus(state, text) {
   const dot = document.getElementById('statusDot');
   const txt = document.getElementById('statusText');
   txt.textContent = text;
-
   dot.className = 'relative w-2.5 h-2.5 rounded-full ';
   if (state === 'connected') dot.classList.add('bg-emerald-400', 'live-dot');
   else if (state === 'connecting') dot.classList.add('bg-yellow-400', 'animate-pulse');
@@ -592,7 +527,6 @@ function updateStatus(state, text) {
   else dot.classList.add('bg-slate-500');
 }
 
-// ==================== GOOGLE SHEETS ====================
 window.setSheetsUrl = function() {
   const url = document.getElementById('sheetsUrl').value.trim();
   if (!url) return;
@@ -606,10 +540,8 @@ async function fetchSheetsData() {
     alert('Please enter Google Sheets URL first');
     return;
   }
-
   const icon = document.getElementById('refreshIcon');
   icon.classList.add('spin');
-
   try {
     const res = await fetch(SHEETS_URL + '?t=' + Date.now());
     const data = await res.json();
@@ -624,11 +556,9 @@ async function fetchSheetsData() {
   icon.classList.remove('spin');
 }
 
-// ==================== DATA SOURCE SWITCHING ====================
 window.switchDataSource = function() {
   const source = document.getElementById('dataSource').value;
   currentSource = source;
-
   if (source === 'demo') {
     sensorData = generateDemoData(50);
     updateUI(sensorData);
@@ -650,7 +580,6 @@ window.refreshData = function() {
   } else if (currentSource === 'sheets') {
     fetchSheetsData();
   } else if (currentSource === 'mqtt') {
-    // MQTT is real-time, just show last data
     if (sensorData.length) updateUI(sensorData);
   }
 };
@@ -660,9 +589,8 @@ initCharts();
 sensorData = generateDemoData(50);
 updateUI(sensorData);
 
-// Auto-reconnect MQTT if credentials exist
 if (MQTT_HOST && MQTT_USER && MQTT_PASS) {
-  setTimeout(() => connectMQTT(), 1000);
+  setTimeout(() => window.connectMQTT(), 1000);
 }
 </script>
 
