@@ -252,6 +252,8 @@ const THRESHOLDS = {
 let sensorData = [];
 let lineChart, barChart, radarChart;
 let currentSource = 'demo';
+let sheetsPollTimer = null;
+const SHEETS_POLL_INTERVAL_MS = 15000;
 
 function generateDemoData(count = 50) {
   const data = [];
@@ -478,6 +480,7 @@ window.connectMQTT = async function() {
       console.log('MQTT connected');
       document.getElementById('dataSource').value = 'mqtt';
       currentSource = 'mqtt';
+      stopSheetsPolling();
       sensorData = [];
     });
 
@@ -524,6 +527,7 @@ function updateStatus(state, text) {
   if (state === 'connected') dot.classList.add('bg-emerald-400', 'live-dot');
   else if (state === 'connecting') dot.classList.add('bg-yellow-400', 'animate-pulse');
   else if (state === 'error') dot.classList.add('bg-red-400');
+  else if (state === 'polling') dot.classList.add('bg-emerald-400', 'live-dot');
   else dot.classList.add('bg-slate-500');
 }
 
@@ -532,40 +536,59 @@ window.setSheetsUrl = function() {
   if (!url) return;
   SHEETS_URL = url;
   localStorage.setItem('water_sheets_url', url);
-  alert('Google Sheets URL saved! Select "Google Sheets" from the dropdown to load data.');
+  document.getElementById('dataSource').value = 'sheets';
+  window.switchDataSource();
 };
 
-async function fetchSheetsData() {
+async function fetchSheetsData(showSpinner = true) {
   if (!SHEETS_URL) {
     alert('Please enter Google Sheets URL first');
     return;
   }
   const icon = document.getElementById('refreshIcon');
-  icon.classList.add('spin');
+  if (showSpinner) icon.classList.add('spin');
   try {
     const res = await fetch(SHEETS_URL + '?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) {
       sensorData = data;
       updateUI(sensorData);
+      updateStatus('polling', `Sheets Live (poll ${SHEETS_POLL_INTERVAL_MS / 1000}s)`);
+    } else if (Array.isArray(data) && data.length === 0) {
+      updateStatus('polling', 'Sheets Live (no rows yet)');
     }
   } catch (e) {
     console.error('Sheets fetch error:', e);
-    alert('Failed to fetch from Google Sheets. Check URL and CORS settings.');
+    updateStatus('error', 'Sheets Fetch Failed');
+    if (showSpinner) alert('Failed to fetch from Google Sheets. Check the deployed URL and that "Who has access" is set to "Anyone".');
   }
-  icon.classList.remove('spin');
+  if (showSpinner) icon.classList.remove('spin');
+}
+
+function startSheetsPolling() {
+  stopSheetsPolling();
+  fetchSheetsData(true);
+  sheetsPollTimer = setInterval(() => fetchSheetsData(false), SHEETS_POLL_INTERVAL_MS);
+}
+
+function stopSheetsPolling() {
+  if (sheetsPollTimer) {
+    clearInterval(sheetsPollTimer);
+    sheetsPollTimer = null;
+  }
 }
 
 window.switchDataSource = function() {
   const source = document.getElementById('dataSource').value;
   currentSource = source;
+  stopSheetsPolling();
   if (source === 'demo') {
     sensorData = generateDemoData(50);
     updateUI(sensorData);
     updateStatus('disconnected', 'Demo Mode');
   } else if (source === 'sheets') {
-    fetchSheetsData();
-    updateStatus('disconnected', 'Sheets Mode');
+    startSheetsPolling();
   } else if (source === 'mqtt') {
     if (!MQTT_CLIENT || !MQTT_CLIENT.connected) {
       alert('Please connect to MQTT broker first using the config panel below.');
@@ -578,7 +601,7 @@ window.refreshData = function() {
     sensorData = generateDemoData(50);
     updateUI(sensorData);
   } else if (currentSource === 'sheets') {
-    fetchSheetsData();
+    fetchSheetsData(true);
   } else if (currentSource === 'mqtt') {
     if (sensorData.length) updateUI(sensorData);
   }
@@ -586,11 +609,19 @@ window.refreshData = function() {
 
 // ==================== STARTUP ====================
 initCharts();
-sensorData = generateDemoData(50);
-updateUI(sensorData);
+
+if (SHEETS_URL) {
+  document.getElementById('dataSource').value = 'sheets';
+  currentSource = 'sheets';
+  startSheetsPolling();
+} else {
+  sensorData = generateDemoData(50);
+  updateUI(sensorData);
+}
 
 if (MQTT_HOST && MQTT_USER && MQTT_PASS) {
-  setTimeout(() => window.connectMQTT(), 1000);
+  // MQTT auto-connect left available but not started automatically,
+  // since your ESP32 currently posts to Google Sheets, not MQTT.
 }
 </script>
 
